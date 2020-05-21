@@ -3,6 +3,16 @@
 
 ![image-20200521115729378](pic/README/image-20200521115729378.png)
 
+
+
+## 闲言碎语
+
+在平时的`漏洞挖掘`过程中经常会有些`Fuzz`的需要，而`自动化工具`一直是各大`SRC`榜首师傅的利器，会凭借的经验与工具集合形成一套自己行之有效的漏洞探测方法，也看到了各位师傅类似于[Watchdog](https://github.com/CTF-MissFeng/Watchdog)的自动化工具，其中有很多思想碰撞的地方，自己也试着写了一版基于`Django`的分布式节点的工具，但是还是感觉差强人意，其中有很多问题就是写出来东西耦合度太高，每个人的信息收集方式方法不同，利用的工具框架也有差别，而且当自己框架中的组件发生`更新`或者`替换`时感觉有些繁琐，因此就简单的构建了这么一个算是`流程框架`的工具，提供标准的接口与流程，大家可以自行按照个人喜好进行`工具`的`更新`与`替换`，可以结合自己的需求对代码进行相应的变更，编写过程中更多的是以某个工具为例，因为优秀的工具实在是太多了，比如就`被动扫描器`来说，[Xray](https://github.com/chaitin/xray)与[w13scan](https://github.com/w-digital-scanner/w13scan)分别具有自身的优点与长处，个人就是站在巨人的肩膀上窥探了一下各位师傅对于相关内容的见解，开发文档之后也会整理成一篇`从零写一个自动化漏洞猎人`的文档，权当是`Debug`笔记，希望能与各位师傅多多学习。
+
+因为是一个`样例版本`，因此代码中很多地方还是欠缺很多，比如，高并发方面没有做出太好的调整，过分依赖`爬虫`以及`被动扫描器`的扫描规则，对于一些逻辑漏洞没有行之有效的判断方法，信息收集也是很粗糙，值得深入研究细化每一个小小的部分都可以拿出来当作一个专门要去学习和深究的方向，还希望可以抛砖引玉，看到师傅们更高的产出。
+
+如果您也有什么想法或者建议，可以联系`echocipher#163.com`，期待与您交流
+
 ## 目录结构
 
 ```
@@ -68,7 +78,7 @@
 
 ![image-20200521143631791](pic/README/image-20200521143631791.png)
 
-在收集子域完成后，通过`端口检测`进行端口检测，目的是发现那些开放在其它端口上的`web`系统，从而能更全面的进行后续的检测，在端口检测过程中会首先通过`check_cdn.py`进行`CDN检测`，之后不存在`CDN`的目标再利用`shodan api`进行`端口检测`以及`服务识别`的过程，然后将检测到的目标按照`协议:DOMAIN:端口`的格式存储到`TASK`表中，如果目标存在`CDN`则默认返回`80`端口存储到`TASK`表中
+在收集子域完成后，通过`端口检测`进行端口检测，目的是发现那些开放在其它端口上的`web`系统，从而能更全面的进行后续的检测，在端口检测过程中会首先读取`SUBDOMAIN`表中的`URL`字段，通过`check_cdn.py`进行`CDN检测`，之后不存在`CDN`的目标再利用`shodan api`进行`端口检测`以及`服务识别`的过程，然后将检测到的目标按照`协议:DOMAIN:端口`的格式存储到`TASK`表中，如果目标存在`CDN`则默认返回`80`端口存储到`TASK`表中
 
 ![image-20200521143650507](pic/README/image-20200521143650507.png)
 
@@ -92,10 +102,10 @@
 
 #### Python
 
-由于`OneForAll`基于[Python 3.8.0](https://www.python.org/downloads/release/python-380/)开发和测试，请使用高于Python 3.8.0的稳定发行版本，其他版本可能会出现一些问题（Windows平台必须使用3.8.0以上版本），安装Python环境可以参考[Python 3 安装指南](https://pythonguidecn.readthedocs.io/zh/latest/starting/installation.html#python-3)。运行以下命令检查Python和pip3版本：
+由于`OneForAll`基于[Python 3.8.0](https://www.python.org/downloads/release/python-380/)开发和测试，请使用高于`Python 3.8.0`的稳定发行版本，其他版本可能会出现一些问题（`Windows`平台必须使用`3.8.0`以上版本），安装`Python`环境可以参考[Python 3 安装指南](https://pythonguidecn.readthedocs.io/zh/latest/starting/installation.html#python-3)。运行以下命令检查`Python`和`pip3`版本：
 
 ```
-python -V
+python3 -V
 pip3 -V
 ```
 
@@ -183,6 +193,18 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 ### Docker安装
 
+```
+docker search autoearn  //查看该项目Docker镜像
+docker pull echocipher/autoearn:latest  //  拉取镜像
+docker pull registry.cn-beijing.aliyuncs.com/autoearn/echocipher  //国内用户拉取较快
+docker run -itd --name autoearn -p 5000:80 echocipher/autoearn:latest  //后台启动容器
+docker ps  //查看已启动的容器
+docker exec -it 你的DockerID bash  //进入容器
+cd AUTO-EARN/  //进入项目目录
+```
+
+之后按照`手工安装`中的`依赖安装`部分进行安装配置即可，在`Docker`镜像中`Python`、`Chrome`以及`Xray`证书均已配置完成，只需完成剩余的`OneForAll`、`Xray`中相应的配置文件按照相应文档进行配置，再完成`./lib/config.py`中的`shodan api`以及`server酱`对应`key`即可使用，当启动`5 - 查看`时，访问`宿主机`的`80`端口即可
+
 ## 使用说明
 
 ### 启动命令
@@ -267,6 +289,12 @@ tail -f logs/server.log
 我们可以通过`查看`功能来起一个`web`服务，从而更方便的看到数据库中的内容，默认每页展示数为`5`，我们可以在`./lib/config.py`中修改这一限制，如果你是通过`手工安装`，你可以通过访问`http://127.0.0.1:5000`来查看这一页面，如果你是 `Docker安装`，你可以通过`Docker`命令将它映射到宿主机的相应端口上，上述配置教程中为转到`80`端口
 
 ![image-20200521183057853](pic/README/image-20200521183057853.png)
+
+## 备注
+
+本项目仅进行漏洞探测工作，无漏洞利用、攻击性行为，开发初衷仅为方便安全人员对授权项目完成测试工作和学习交流使用，**请使用者遵守当地相关法律，勿用于非授权测试，如作他用所承受的法律责任一概与作者无关，下载使用即代表使用者同意上述观点**。
+
+附《[中华人民共和国网络安全法]([https://baike.baidu.com/item/%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B3%95](https://baike.baidu.com/item/中华人民共和国网络安全法))》。
 
 ## 参考资源
 
