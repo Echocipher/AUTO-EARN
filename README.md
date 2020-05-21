@@ -1,5 +1,5 @@
 # AUTO-EARN
-![python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)](https://www.python.org/)
 
 ![image-20200521115729378](pic/README/image-20200521115729378.png)
 
@@ -40,18 +40,18 @@
 │  └─README
 │          
 ├─results
-│      result.sqlite3
+│      result.sqlite3  //数据库
 │      
 ├─templates
-│      index.html
+│      index.html //主页文件
 │      
 └─tools
-    ├  crawlergo 
-    ├  chrome
-    ├  masscan             
-    ├  OneForAll                      
-    ├  wafcheck             
-    └  xray
+    ├  crawlergo  //一个使用chrome headless模式进行URL入口收集的动态爬虫
+    ├  chrome  //chrome浏览器
+    ├  masscan //异步传输，无状态的扫描端口工具             
+    ├  OneForAll  //一款功能强大的子域收集工具                      
+    ├  wafcheck  //WAF指纹识别工具             
+    └  xray  //一款躺着收洞的神器
 ```
 
 
@@ -64,15 +64,19 @@
 
 首先通过`target.txt`读取到`目标`之后，由`OneForAll`后台进行子域名收集过程，然后通过`subdomain_monitor.py`进行监控，监测子域收集过程是否完成，完成后会通过`server酱`进行消息推送，并且存入本地数据库中的`SUBDOMAIN`表
 
-![image-20200521115553438](pic/README/image-20200521115553438.png)
+![image-20200521142924673](pic/README/image-20200521142924673.png)
+
+![image-20200521143631791](pic/README/image-20200521143631791.png)
 
 在收集子域完成后，通过`端口检测`进行端口检测，目的是发现那些开放在其它端口上的`web`系统，从而能更全面的进行后续的检测，在端口检测过程中会首先通过`check_cdn.py`进行`CDN检测`，之后不存在`CDN`的目标再利用`shodan api`进行`端口检测`以及`服务识别`的过程，然后将检测到的目标按照`协议:DOMAIN:端口`的格式存储到`TASK`表中，如果目标存在`CDN`则默认返回`80`端口存储到`TASK`表中
+
+![image-20200521143650507](pic/README/image-20200521143650507.png)
 
 之后`WAF检测`过程会对`TASK`中的每个目标通过`Wafw00f`进行指纹识别，并且修改`TASK`表中的`WAF`字段，这里大家可以根据自己的需求再进行更改，比如舍弃存在`WAF`的目标
 
 `Fuzz`阶段会首先调用[crawlergo](https://github.com/0Kee-Team/crawlergo)使用`chrome headless`模式进行URL入口收集，我们可以利用`--push-to-proxy`来连接我们的被动扫描器[xray](https://github.com/chaitin/xray)进行漏洞扫描， `xray` 有一种漏洞输出模式叫 `webhook-output`，在发现漏洞的时候，将会向指定的 `url`以 `post`的方式传输漏洞数据，之后我们通过搭建一个 `web` 服务器，接收到 `xray` 发送的漏洞信息，然后在将它转发，我们借助于 `Python` 的 `flask` 框架构造了`server.py`，接下来就是解析 `xray` 的漏洞信息，然后生成对应的页面模板，之后通过`server酱`我们就可以将漏洞信息推送到我们的微信中
 
-![image-20200521132357421](pic/README/image-20200521132357421.png)
+
 
 并且我们模板中的相应字段我们会存储在`VULN`表中
 
@@ -109,6 +113,7 @@ git clone https://github.com/Echocipher/AUTO-EARN
 #### 依赖安装
 
 ```
+cd AUTO-EARN/
 python3 -m pip install -U pip setuptools wheel -i https://mirrors.aliyun.com/pypi/simple/
 pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 ```
