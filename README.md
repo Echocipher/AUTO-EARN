@@ -189,8 +189,23 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 ```
 cd AUTO-EARN/
+sh start.sh
 python3 autoearn.py
+sh stop.sh
 ```
+
+如果是`Windows`可自行构建`bat`来完成相应的过程，大致流程如下
+
+1. 启动子域收集后，运行`python3 subdomain_monitor.py`
+
+2. 漏洞扫描时运行如下命令
+
+   ```
+   python3 server.py
+   ./tools/xray/xray_linux_amd64 webscan --listen 127.0.0.1:7777 --webhook-output http://127.0.0.1:2333/webhook
+   ```
+
+3. 也可以利用`>`实现相应的日志记录功能
 
 ### 参数说明
 
