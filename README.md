@@ -76,13 +76,13 @@
 
 `Fuzz`阶段会首先调用[crawlergo](https://github.com/0Kee-Team/crawlergo)使用`chrome headless`模式进行URL入口收集，我们可以利用`--push-to-proxy`来连接我们的被动扫描器[xray](https://github.com/chaitin/xray)进行漏洞扫描， `xray` 有一种漏洞输出模式叫 `webhook-output`，在发现漏洞的时候，将会向指定的 `url`以 `post`的方式传输漏洞数据，之后我们通过搭建一个 `web` 服务器，接收到 `xray` 发送的漏洞信息，然后在将它转发，我们借助于 `Python` 的 `flask` 框架构造了`server.py`，接下来就是解析 `xray` 的漏洞信息，然后生成对应的页面模板，之后通过`server酱`我们就可以将漏洞信息推送到我们的微信中
 
-
+![image-20200521152101746](pic/README/image-20200521152101746.png)
 
 并且我们模板中的相应字段我们会存储在`VULN`表中
 
 之后我们会利用`app.py`生成一个`index.html`，我们就可以通过`查看`功能来查看数据库内相应的字段，并且利用`Echarts`进行数据可视化过程
 
-![image-20200521132723623](pic/README/image-20200521132723623.png)
+![image-20200521152214424](pic/README/image-20200521152214424.png)
 
 ## 配置安装
 
@@ -107,7 +107,10 @@ pip 19.2.2 from C:\Users\shmilylty\AppData\Roaming\Python\Python38\site-packages
 #### Git克隆部署
 
 ```
+# Github地址
 git clone https://github.com/Echocipher/AUTO-EARN
+# Gitee地址（国内速度块）
+git clone https://gitee.com/echocipher/AUTO-EARN
 ```
 
 #### 依赖安装
@@ -117,4 +120,62 @@ cd AUTO-EARN/
 python3 -m pip install -U pip setuptools wheel -i https://mirrors.aliyun.com/pypi/simple/
 pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 ```
+
+#### 相关配置
+
+1. `chrome`请按照自己系统版本进行下载安装，放置在`./tools/chrome`中，或者在`./lib/config.py`中修改相应的位置，`crawlergo `只依赖`chrome`运行即可，前往[下载](https://www.chromium.org/getting-involved/download-chromium)新版本的`chromium`，或者直接[点击下载Linux79版本](https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/706915/chrome-linux.zip)。
+
+   ![image-20200521160530503](pic/README/image-20200521160530503.png)
+
+2. `OneForAll`相关配置在`./tools/OneForAll`目录中按照[OneForAll文档](https://github.com/shmilylty/OneForAll)按需进行个人配置即可
+
+3. 在`./lib/config.py`中按照自己的需求对`server酱`、`shodan api`等进行配置
+
+   ```
+   '''
+   AUTOEARN配置
+   '''
+   # 目标文件位置
+   target_file_path = 'target.txt'
+   # OneForAll相关配置
+   oneforall_path = './tools/OneForAll/oneforall.py'
+   # OneForAll数据库位置
+   oneforall_sql_path = './tools/OneForAll/results/result.sqlite3'
+   # Server酱SCKEY (http://sc.ftqq.com/?c=code)
+   sckey = "https://sc.ftqq.com/{你的key}.send"
+   # subdomain_status_check间隔时间
+   server_sleep_time = 10
+   # autoearn数据库位置
+   result_sql_path = './results/result.sqlite3'
+   #shodan API
+   SHODAN_API_KEY = '{你的key}'
+   # masscan位置
+   masscan_path = './tools/masscan/bin/masscan'
+   # masscan端口扫描范围
+   masscan_port = '1-65535'
+   # masscan临时文件保存位置
+   masscan_file = './results/masscan.json'
+   # masscan速率
+   masscan_rate = '1000'
+   # 端口最大数目阈值
+   port_num_max = 50
+   # wafw00f位置
+   wafw00f_path = './tools/wafcheck/main.py'
+   # crawlergo位置
+   crawlergo_path = './tools/crawlergo'
+   # chrome位置
+   chrome_path = "./tools/chrome/chrome"
+   # 爬虫同时开启最大标签页，即同时爬取的页面数量。
+   max_tab_count = "20"
+   # 发送爬虫结果到监听地址时的最大并发数
+   max_send_count = "10"
+   # Xray被动代理地址
+   push_to_proxy = "http://127.0.0.1:7777"
+   # 端口检查线程数
+   port_check_thread_num = 10
+   ```
+
+4. `xray`配置按照[xray文档]([https://xray.cool/xray/#/tutorial/webscan_proxy?id=%e7%94%9f%e6%88%90-ca-%e8%af%81%e4%b9%a6](https://xray.cool/xray/#/tutorial/webscan_proxy?id=生成-ca-证书))根据个人系统进行`CA证书`配置以及`config.yml`配置
+
+### Docker安装
 
