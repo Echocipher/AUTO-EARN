@@ -39,3 +39,5 @@ max_send_count = "10"
 push_to_proxy = "http://127.0.0.1:7777"
 # 端口检查线程数
 port_check_thread_num = 10
+# 主页默认每页显示数目
+PER_PAGE = 10

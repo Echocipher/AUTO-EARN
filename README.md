@@ -74,6 +74,8 @@
 
 之后`WAF检测`过程会对`TASK`中的每个目标通过`Wafw00f`进行指纹识别，并且修改`TASK`表中的`WAF`字段，这里大家可以根据自己的需求再进行更改，比如舍弃存在`WAF`的目标
 
+![image-20200521172538644](pic/README/image-20200521172538644.png)
+
 `Fuzz`阶段会首先调用[crawlergo](https://github.com/0Kee-Team/crawlergo)使用`chrome headless`模式进行URL入口收集，我们可以利用`--push-to-proxy`来连接我们的被动扫描器[xray](https://github.com/chaitin/xray)进行漏洞扫描， `xray` 有一种漏洞输出模式叫 `webhook-output`，在发现漏洞的时候，将会向指定的 `url`以 `post`的方式传输漏洞数据，之后我们通过搭建一个 `web` 服务器，接收到 `xray` 发送的漏洞信息，然后在将它转发，我们借助于 `Python` 的 `flask` 框架构造了`server.py`，接下来就是解析 `xray` 的漏洞信息，然后生成对应的页面模板，之后通过`server酱`我们就可以将漏洞信息推送到我们的微信中
 
 ![image-20200521152101746](pic/README/image-20200521152101746.png)
@@ -173,9 +175,88 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
    push_to_proxy = "http://127.0.0.1:7777"
    # 端口检查线程数
    port_check_thread_num = 10
+   # 主页默认每页显示数目
+   PER_PAGE = 10
    ```
 
 4. `xray`配置按照[xray文档]([https://xray.cool/xray/#/tutorial/webscan_proxy?id=%e7%94%9f%e6%88%90-ca-%e8%af%81%e4%b9%a6](https://xray.cool/xray/#/tutorial/webscan_proxy?id=生成-ca-证书))根据个人系统进行`CA证书`配置以及`config.yml`配置
 
 ### Docker安装
+
+## 使用说明
+
+### 启动命令
+
+```
+cd AUTO-EARN/
+python3 autoearn.py
+```
+
+### 参数说明
+
+#### 1 - 获取子域
+
+利用`oneforall`进行子域收集，收集过程中可以通过如下命令查看其中相应的日志信息
+
+```
+# 查看oneforall日志信息
+tail -f logs/oneforall.log
+```
+
+![image-20200521174357261](pic/README/image-20200521174357261.png)
+
+```
+# 查看子域收集监控信息
+tail -f logs/subdomain_monitor.log
+```
+
+![image-20200521174322059](pic/README/image-20200521174322059.png)
+
+收集完成会收到相应通知，并且在数据库`SUBDOMAIN`表中进行相应存储
+
+![image-20200521175401007](pic/README/image-20200521175401007.png)
+
+#### 2 - 端口检测
+
+![image-20200521175326338](pic/README/image-20200521175326338.png)
+
+在子域收集完成后，我们就可以进行端口检测过程了，这里我们默认使用的是`shodan api`，默认线程数目为`10`，其中`masscan+nmap`代码已经加入其中，默认阈值是`50`，只需要进行简单的代码上的调整就可以完成应用，这里不做过多介绍，当端口检测完成后会像文初说的那样插入数据库中的`TASK`表
+
+#### 3 - WAF检测
+
+在上一部分任务数据库已经插入完成之后，程序会利用`wafw00f`对每个目标进行指纹识别，并且插入数据库中的`WAF`字段，我们可以在之后的`5 - 查看`时直观的看到结果
+
+
+
+#### 4 - 爬虫爬取 + 漏洞探测 + 消息通知
+
+该部分会像上面`工具流程`中说的那样自动化的完成页面链接的爬取以及发往被动扫描器的过程，`FUZZ`过程中我们可以使用如下命令查看相应日志信息
+
+```
+# 查看crawlergo日志信息
+tail -f logs/crawlergo.log
+# 查看xray日志信息
+tail -f logs/xray.log
+# 查看漏洞推送server信息
+tail -f logs/server.log
+```
+
+当扫描到漏洞时，会利用`server酱`进行通知提醒，并且存储在数据库中`VULN`表中
+
+![image-20200521181546824](pic/README/image-20200521181546824.png)
+
+#### 5 - 查看
+
+我们可以通过`查看`功能来起一个`web`服务，从而更方便的看到数据库中的内容，默认每页展示数为`5`，我们可以在`./lib/config.py`中修改这一限制，如果你是通过`手工安装`，你可以通过访问`http://127.0.0.1:5000`来查看这一页面，如果你是 `Docker安装`，你可以通过`Docker`命令将它映射到宿主机的相应端口上，上述配置教程中为转到`80`端口
+
+![image-20200521183057853](pic/README/image-20200521183057853.png)
+
+## 参考资源
+
+1. [OneForAll - 一款功能强大的子域收集工具](https://github.com/shmilylty/OneForAll/)
+2. [Shodan - Shodan is the world's first search engine for Internet-connected devices](https://www.shodan.io/)
+3. [Crawlergo - 一个使用chrome headless模式进行URL入口收集的动态爬虫](https://github.com/0Kee-Team/crawlergo)
+4. [Xray - 一款躺着收洞的神器](https://xray.cool/xray/#/)
+5. [Rich - Rich is a Python library for rich text and beautiful formatting in the terminal](https://github.com/willmcgugan/rich)
+6. [crawlergo_x_XRAY - 360/0Kee-Team/crawlergo动态爬虫结合长亭XRAY扫描器的被动扫描功能](https://github.com/timwhitez/crawlergo_x_XRAY)
 

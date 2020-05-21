@@ -37,7 +37,7 @@ def index():
             }
             result_list.append(result)
     # 分页
-    PER_PAGE = 5 #每页展示条数
+    PER_PAGE = config.PER_PAGE #每页展示条数
     total = len(subdomains)
     page = int(request.args.get('page', 1))
     start = (page - 1) * PER_PAGE
