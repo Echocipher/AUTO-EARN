@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>AUTO EAEN : 一款SRC辅助工具</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="container">
+			<div class="jumbotron">
+				<h1>AUTO EARN</h1>
+				<h2>”三五之夜,明月半墙,桂影斑驳,风移影动,珊珊可爱。“</h2>
+				<hr>
+				<div>
+					<div class="panel-body">
+				        <div id="main" style="width: 600px;height:400px;"></div>
+						<script type="text/javascript">
+							// 基于准备好的dom，初始化ECharts实例
+							{% autoescape off %}
+							var myChart = echarts.init(document.getElementById('main'));
+
+							// 指定图表的配置项和数据
+							var option = {
+							    title: {
+							        text: '漏洞数据总览',
+							        left: 'center'
+							    },
+							    tooltip: {
+							        trigger: 'item',
+							        formatter: '{a} <br/>{b} : {c} ({d}%)'
+							    },
+							    series: [
+							        {
+							            name: '漏洞类型',
+							            type: 'pie',
+							            radius: '55%',
+							            center: ['50%', '60%'],
+							            data: {{ result_list }},
+							            emphasis: {
+							                itemStyle: {
+							                    shadowBlur: 10,
+							                    shadowOffsetX: 0,
+							                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+							                }
+							            }
+							        }
+							    ]
+							};
+							// 使用刚指定的配置项和数据显示图表。
+							myChart.setOption(option);
+							myChart.currentIndex = -1;
+
+							setInterval(function () {
+							    var dataLen = option.series[0].data.length;
+							    // 取消之前高亮的图形
+							    myChart.dispatchAction({
+							        type: 'downplay',
+							        seriesIndex: 0,
+							        dataIndex: myChart.currentIndex
+							    });
+							    myChart.currentIndex = (myChart.currentIndex + 1) % dataLen;
+							    // 高亮当前图形
+							    myChart.dispatchAction({
+							        type: 'highlight',
+							        seriesIndex: 0,
+							        dataIndex: myChart.currentIndex
+							    });
+							    // 显示 tooltip
+							    myChart.dispatchAction({
+							        type: 'showTip',
+							        seriesIndex: 0,
+							        dataIndex: myChart.currentIndex
+							    });
+							}, 1000);
+						{% endautoescape %}
+						</script>
+				            <p style="font-family: 楷体;font-size: 16pt;font-weight: bold">当前漏洞总数：{{ vuls_total }}</p>
+				            <hr>
+				        </div>
+				    </div>
+			    <hr>
+				<!-- 子域详情 -->
+				<div> 
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span class="label label-info">子域详情</span>
+						</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-hover" style="word-break:break-all; word-wrap:break-all;">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>URL</th>
+									<th>TIME</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for domain in subdomain %}
+									<tr>
+										<td>{{ domain[0] }}</td>
+										<td>{{ domain[1] }}</td>
+										<td>{{ domain[2] }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<div>
+						</div>
+					</div>
+				</div>
+				<!-- 任务详情 -->
+				<div> 
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span class="label label-info">任务详情</span>
+						</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-hover" style="word-break:break-all; word-wrap:break-all;">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>URL</th>
+									<th>WAF</th>
+									<th>STATUS</th>
+									<th>TIME</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for task in tasks %}
+									<tr>
+										<td>{{ task[0] }}</td>
+										<td>{{ task[1] }}</td>
+										<td>{{ task[3] }}</td>
+										<td>{{ task[4] }}</td>
+										<td>{{ task[5] }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<div>
+						</div>
+					</div>
+				</div>
+				<!-- 漏洞详情 -->
+				<div> 
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span class="label label-info">漏洞详情</span>
+						</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-hover" style="word-break:break-all; word-wrap:break-all;">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>URL</th>
+									<th>PLUGIN</th>
+									<th>CLASS</th>
+									<th>TIME</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for vul in vuls %}
+									<tr>
+										<td>{{ vul[0] }}</td>
+										<td>{{ vul[1] }}</td>
+										<td>{{ vul[2] }}</td>
+										<td>{{ vul[3] }}</td>
+										<td>{{ vul[4] }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<div>
+							{{ paginate.links }}
+						</div>
+					</div>
+				</div>
+				<div>
+					<h3 class="footer-title">本系统禁止进行未授权、非法渗透测试</h3>
+					<p>请使用者遵守当地相关法律，勿用于非授权测试，如作他用所承受的法律责任一概与作者无关，下载使用即代表使用者同意上述观点。
+					<br/>
+					详情请访问: <a href="http://www.npc.gov.cn/npc/xinwen/2016-11/07/content_2001605.htm" target="_blank">《中华人民共和国网络安全法》</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>
