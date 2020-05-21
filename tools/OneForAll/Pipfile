@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+tqdm = "*"
+loguru = "*"
+dnspython = "*"
+requests = "*"
+records = "*"
+tldextract = "*"
+exrex = "*"
+aiohttp = "*"
+fire = "*"
+bs4 = "*"
+pysocks = "*"
+cloudscraper = "*"
+tablib = "*"
+psutil = "*"
+tenacity = "*"
+
+[requires]
+python_version = "3.8"
