@@ -207,6 +207,8 @@ sh stop.sh
 
 3. 也可以利用`>`实现相应的日志记录功能
 
+4. 结束时终止如上进程以及备份`./results/result.sqlite3`以及清理`./tools/OneForAll/results`目录文件
+
 ### 参数说明
 
 #### 1 - 获取子域
