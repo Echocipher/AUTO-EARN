@@ -195,7 +195,7 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 ```
 docker search autoearn  //查看该项目Docker镜像
 docker pull echocipher/autoearn:latest  //  拉取镜像
-docker pull registry.cn-beijing.aliyuncs.com/autoearn/echocipher  //国内用户拉取较快
+docker pull registry.cn-beijing.aliyuncs.com/echocipher/autoearn  //国内用户拉取较快
 docker run -itd --name autoearn -p 5000:80 echocipher/autoearn:latest  //后台启动容器
 docker ps  //查看已启动的容器
 docker exec -it 你的DockerID bash  //进入容器
