@@ -230,6 +230,10 @@ sh stop.sh
 
 4. 结束时终止如上进程以及备份`./results/result.sqlite3`以及清理`./tools/OneForAll/results`目录文件
 
+### 使用流程
+
+`获取子域`   -  `等待通知`  - `端口检测` -  `WAF检测（非必须，可跳过）`  -  `爬虫爬取 + 漏洞探测 + 消息通知`  -  `查看`
+
 ### 参数说明
 
 #### 1 - 获取子域
@@ -279,7 +283,9 @@ tail -f logs/server.log
 
 当扫描到漏洞时，会利用`server酱`进行通知提醒，并且存储在数据库中`VULN`表中
 
-![image-20200521181546824](pic/README/image-20200521181546824.png)
+![image-20200522121439946](pic/README/image-20200522121439946.png)
+
+![image-20200522121533025](pic/README/image-20200522121533025.png)
 
 #### 5 - 查看
 
