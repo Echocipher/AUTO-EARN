@@ -40,7 +40,6 @@
 │      __init__.py
 │      
 ├─logs
-│      crawlergo.log  //crawlergo日志
 │      oneforall.log  //oneforall日志
 │      server.log  //漏洞推送日志
 │      subdomain_monitor.log //子域收集监控日志
@@ -70,7 +69,7 @@
 
 `AUTO-EARN`是一个利用[OneForAll](https://github.com/shmilylty/OneForAll)进行子域收集、[Shodan API](https://www.shodan.io/?language=en)端口扫描、[Wafw00f](https://github.com/EnableSecurity/wafw00f)进行WAF指纹识别、[Xray](https://xray.cool/xray/)漏洞Fuzz、[Server酱](http://sc.ftqq.com/3.version)的自动化漏洞扫描、由`Flask`支撑一个简单可视化界面，即时通知提醒的漏洞挖掘辅助工具，本质上更像是一个流程框架，完成各工具之前的自动化联动过程，这个工具执行流程如下
 
-![image-20200521113836222](pic/README/image-20200521113836222.png)
+![image-20200522113030801](pic/README/image-20200522113030801.png)
 
 首先通过`target.txt`读取到`目标`之后，由`OneForAll`后台进行子域名收集过程，然后通过`subdomain_monitor.py`进行监控，监测子域收集过程是否完成，完成后会通过`server酱`进行消息推送，并且存入本地数据库中的`SUBDOMAIN`表
 
@@ -272,8 +271,6 @@ tail -f logs/subdomain_monitor.log
 该部分会像上面`工具流程`中说的那样自动化的完成页面链接的爬取以及发往被动扫描器的过程，`FUZZ`过程中我们可以使用如下命令查看相应日志信息
 
 ```
-# 查看crawlergo日志信息
-tail -f logs/crawlergo.log
 # 查看xray日志信息
 tail -f logs/xray.log
 # 查看漏洞推送server信息
