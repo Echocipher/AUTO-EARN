@@ -196,13 +196,13 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 docker search autoearn  //查看该项目Docker镜像
 docker pull echocipher/autoearn:latest  //  拉取镜像
 docker pull registry.cn-beijing.aliyuncs.com/echocipher/autoearn  //国内用户拉取较快
-docker run -itd --name autoearn -p 5000:80 echocipher/autoearn:latest  //后台启动容器
+docker run -itd --name autoearn -p 5000:5000  echocipher/autoearn:latest  //后台启动容器
 docker ps  //查看已启动的容器
 docker exec -it 你的DockerID bash  //进入容器
 cd AUTO-EARN/  //进入项目目录
 ```
 
-之后按照`手工安装`中的`依赖安装`部分进行安装配置即可，在`Docker`镜像中`Python`、`Chrome`以及`Xray`证书均已配置完成，只需完成剩余的`OneForAll`、`Xray`中相应的配置文件按照相应文档进行配置，再完成`./lib/config.py`中的`shodan api`以及`server酱`对应`key`即可使用，当启动`5 - 查看`时，访问`宿主机`的`80`端口即可
+之后按照`手工安装`中的`依赖安装`部分进行安装配置即可，在`Docker`镜像中`Python`、`Chrome`以及`Xray`证书均已配置完成，只需完成剩余的`OneForAll`、`Xray`中相应的配置文件按照相应文档进行配置，再完成`./lib/config.py`中的`shodan api`以及`server酱`对应`key`即可使用，当启动`5 - 查看`时，访问`宿主机`的`5000`端口即可
 
 ## 使用说明
 
