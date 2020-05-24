@@ -3,7 +3,17 @@
 
 ![image-20200521115729378](pic/README/image-20200521115729378.png)
 
+## 关于
 
+Author：DeadEye-Echocipher
+
+Mail：echocipher#163.com
+
+Github：https://github.com/Echocipher/AUTO-EARN
+
+团队公众号：
+
+![qrcode_gh_fcf5d3d1e57d_1](README/qrcode_gh_fcf5d3d1e57d_1.jpg)
 
 ## 闲言碎语
 
