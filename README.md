@@ -150,7 +150,7 @@ pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 #### 相关配置
 
-1. `chrome`请按照自己系统版本进行下载安装，放置在`./tools/chrome`中，或者在`./lib/config.py`中修改相应的位置，`crawlergo `只依赖`chrome`运行即可，前往[下载](https://www.chromium.org/getting-involved/download-chromium)新版本的`chromium`，或者直接[点击下载Linux79版本](https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/706915/chrome-linux.zip)。`chrome`相关纠错可以按照[Trouble Shooting](https://github.com/0Kee-Team/crawlergo#trouble-shooting)进行修改，然后前往[页面下载](https://github.com/0Kee-Team/crawlergo/releases)最新版本的crawlergo解压到任意目录，如果是linux或者macOS系统，请赋予crawlergo**可执行权限(+x)**。
+1. `chrome`请按照自己系统版本进行下载安装，放置在`./tools/chrome`中，或者在`./lib/config.py`中修改相应的位置，`crawlergo `只依赖`chrome`运行即可，前往[下载](https://www.chromium.org/getting-involved/download-chromium)新版本的`chromium`，或者直接[点击下载Linux79版本](https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/706915/chrome-linux.zip)。`chrome`相关纠错可以按照[Trouble Shooting](https://github.com/0Kee-Team/crawlergo#trouble-shooting)进行修改，然后前往[页面下载](https://github.com/0Kee-Team/crawlergo/releases)最新版本的crawlergo解压到`./tools/`或者在`./lib/config.py`中指定相应的位置参数，如果是linux或者macOS系统，请赋予crawlergo**可执行权限(+x)**。
 
    ![image-20200521160530503](pic/README/image-20200521160530503.png)
 
