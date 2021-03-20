@@ -21,7 +21,7 @@ flask-paginate==0.6.0
 idna==2.9
 itsdangerous==1.1.0
 jdcal==1.4.1
-Jinja2==2.11.2
+Jinja2==2.11.3
 loguru==0.4.1
 MarkupSafe==1.1.1
 multidict==4.7.5
