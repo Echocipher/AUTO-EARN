@@ -29,7 +29,7 @@ openpyxl==2.4.11
 pluginbase==1.0.0
 pprintpp==0.4.0
 psutil==5.7.0
-Pygments==2.6.1
+Pygments==2.7.4
 pyparsing==2.4.7
 python-nmap==0.6.1
 records==0.5.3
